@@ -1,8 +1,11 @@
 import { db } from "@/lib/db";
 import { addTask } from "@/app/actions";
 import { deleteTask } from "@/app/actions";
+import { toggleTask } from "@/app/actions";
+import EditableTask from "@/app/component/EditableTask";
 import { Trash2 } from "lucide-react";
 import type { Task } from "@/app/generated/prisma/client"
+
 
 export default async function Home() {
   // Fetch tasks directly from the DB
@@ -29,15 +32,36 @@ export default async function Home() {
       </form>
 
       {/* List of tasks */}
-      <ul className="space-y-2">
-        {tasks.map((task) => (
-          <li key={task.id} className="p-3 bg-gray-100 rounded flex justify-between items-center text-black">
-            <span>{task.title}</span>
+      <ul className="space-y-3">
+        {tasks.map((task: Task) => (
+          <li 
+            key={task.id} 
+            className="p-4 bg-white border border-gray-200 rounded-lg shadow-sm flex justify-between items-center text-black"
+          >
+            <div className="flex items-center gap-3">
+              {/* Toggle Checkbox */}
+              <form action={async () => {
+                "use server"
+                await toggleTask(task.id, task.isCompleted)
+              }}>
+                <button 
+                  type="submit"
+                  className={`w-6 h-6 border rounded-full flex items-center justify-center transition-colors ${
+                    task.isCompleted ? "bg-green-500 border-green-500" : "border-gray-300"
+                  }`}
+                >
+                  {task.isCompleted && <span className="text-white text-xs">✓</span>}
+                </button>
+              </form>
+
+              {/* Task Title with conditional styling */}
+              <EditableTask task={task} />
+            </div>
             
-            {/* Small form just for the delete button */}
+            {/* Delete Button (Keep your existing trash icon code here) */}
             <form action={deleteTask}>
               <input type="hidden" name="id" value={task.id} />
-              <button className="text-gray-400 hover:text-red-600 rounded-md transition-all">
+              <button type="submit" className="p-2 text-gray-400 hover:text-red-600">
                 <Trash2 size={18} />
               </button>
             </form>

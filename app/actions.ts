@@ -26,3 +26,23 @@ export async function deleteTask(formData: FormData) {
 
   revalidatePath("/");
 }
+export async function toggleTask(id: number, completed: boolean) {
+  "use server"
+  
+  await db.task.update({
+    where: { id },
+    data: { isCompleted: !completed }, // Flips true to false, or false to true
+  });
+
+  revalidatePath("/");
+}
+export async function updateTaskTitle(id: number, newTitle: string) {
+  "use server"
+  
+  await db.task.update({
+    where: { id },
+    data: { title: newTitle },
+  });
+
+  revalidatePath("/");
+}
