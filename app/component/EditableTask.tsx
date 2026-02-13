@@ -17,20 +17,23 @@ export default function EditableTask({ task }: { task: Task }) {
     return (
       <div className="flex items-center gap-2">
         <input 
-          className="border p-1 rounded text-black"
+          className="border p-1 rounded text-black w-40"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           autoFocus
         />
-        <button onClick={handleUpdate} className="text-green-600 text-sm font-bold">Save</button>
-        <button onClick={() => setIsEditing(false)} className="text-gray-400 text-sm">Cancel</button>
+        <button onClick={handleUpdate} className="text-green-600 text-sm font-bold ml-0">Save</button>
+        <button onClick={() => setIsEditing(false)} className="text-gray-400 text-sm ml-1">Cancel</button>
       </div>
     );
   }
 
   return (
     <span 
-      onClick={() => setIsEditing(true)}
+      onClick={() => {
+        setTitle(task.title);
+        setIsEditing(true);
+      }}
       className={`cursor-pointer transition-all ${task.isCompleted ? "line-through text-gray-400" : "font-medium"}`}
     >
       {task.title}
